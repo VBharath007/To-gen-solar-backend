@@ -45,6 +45,14 @@ For development with hot reload:
 npm run dev
 ```
 
-## Docker Deployment
+## Docker / Railway Deployment
 
 The included `Dockerfile` installs dependencies, installs Playwright Chromium, runs `npm run check && npm run pdf:build`, exposes port `8080`, and runs `npm start`.
+
+When deploying on Railway (or similar cloud hosts without `service-account-admin.json`), configure these environment variables:
+
+- `GCLOUD_PROJECT`
+- `FIREBASE_STORAGE_BUCKET`
+- `FIREBASE_SERVICE_ACCOUNT_JSON` (paste your Firebase Admin service-account JSON content)
+- `WEB_ORIGIN=*`
+
