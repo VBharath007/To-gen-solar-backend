@@ -1106,7 +1106,7 @@ export async function generateQuotationPdfPagesHtml(
 
   // Common Header HTML - displays the official ToGen Solar Agro header banner across every page, with 5px gap on left & right
   const renderHeader = () => `
-    <div style="width: calc(100% + 66px); margin: 0 -33px 10px -33px; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
+    <div style="width: calc(100% + 66px); margin: 0 -33px 20px -33px; flex-shrink: 0; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
       <img src="${headerBanner}" style="width: 100%; height: auto; max-height: 145px; object-fit: contain; display: block; margin: 0 auto; image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;" alt="ToGen Solar Agro Header" />
     </div>
   `;
@@ -1609,7 +1609,7 @@ export async function generateQuotationPdfPagesHtml(
       ${renderHeader()}
       ${renderWatermark()}
 
-      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 10px;">
+      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 22px; margin-bottom: 12px;">
         <!-- Section 1: Project Details -->
         <div style="flex-shrink: 0;">
           <div style="background: #0f2b48; color: #ffffff; padding: 7px 12px; border-radius: 5px 5px 0 0; margin-bottom: 0;">
@@ -2066,7 +2066,7 @@ export async function generateQuotationPdfPagesHtml(
       ${renderHeader()}
       ${renderWatermark()}
 
-      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; margin-bottom: 6px;">
+      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 24px; margin-bottom: 12px;">
         <!-- Section 1: Commercials Table -->
         <div style="flex-shrink: 0;">
           ${renderCommercialsTableBlock(true)}
@@ -2097,8 +2097,8 @@ export async function generateQuotationPdfPagesHtml(
       ${renderHeader()}
       ${renderWatermark()}
 
-      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; margin-bottom: 6px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <div style="width: 4px; height: 16px; background: #008289; border-radius: 2px; flex-shrink: 0;"></div>
             <h2 style="margin: 0; color: #0f2b48; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;">CUSTOMER REQUIRED DOCUMENTS</h2>
@@ -2106,7 +2106,7 @@ export async function generateQuotationPdfPagesHtml(
           <span style="color: #475569; font-size: 9.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;">PM - SURYA GHAR SUBSIDY</span>
         </div>
 
-        <div style="color: #64748b; font-size: 9px; line-height: 1.3; margin: 0 0 5px 2px;">
+        <div style="color: #64748b; font-size: 9px; line-height: 1.3; margin: 0 0 8px 2px;">
           Official sample reference copies of documents required for PM - Surya Ghar Muft Bijli Yojana subsidy registration and net-meter sanctioning.
         </div>
 
@@ -2190,7 +2190,7 @@ export async function generateQuotationPdfPagesHtml(
         </table>
 
         <!-- Section 2: Important Notes & Disclaimer -->
-        <div style="margin-top: 8px;">
+        <div style="margin-top: 16px;">
           <div style="background: #0f2b48; color: #ffffff; padding: 5px 12px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
             <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.8px;">IMPORTANT NOTES &amp; DISCLAIMER</span>
           </div>
@@ -2232,7 +2232,7 @@ export async function generateQuotationPdfPagesHtml(
       ${renderHeader()}
       ${renderWatermark()}
 
-      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 10px;">
+      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 22px; margin-bottom: 12px;">
         <!-- Section 1: Project Implementation Schedule -->
         <div>
           <div style="background: #0f2b48; color: #ffffff; padding: 7px 14px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
