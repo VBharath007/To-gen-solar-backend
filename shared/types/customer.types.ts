@@ -1,3 +1,15 @@
+export type CustomerType =
+  | 'Individual'
+  | 'Company'
+  | 'Business'
+  | 'Commercial'
+  | 'Industrial'
+  | 'Agricultural'
+  | 'Government'
+  | 'Residential'
+  | 'Other'
+  | (string & {});
+
 /** A customer record returned from the database. */
 export interface Customer {
   id: number;
@@ -10,7 +22,7 @@ export interface Customer {
   pincode: string | null;
   gstin: string | null;
   pan: string | null;
-  customer_type: 'Individual' | 'Business' | 'Government' | 'Other';
+  customer_type: CustomerType;
   company_name: string | null;
   alternate_phone: string | null;
   business_category: string | null;
@@ -32,7 +44,7 @@ export interface CreateCustomerDto {
   pincode?: string | null;
   gstin?: string | null;
   pan?: string | null;
-  customer_type?: 'Individual' | 'Business' | 'Government' | 'Other';
+  customer_type?: CustomerType;
   company_name?: string | null;
   alternate_phone?: string | null;
   business_category?: string | null;

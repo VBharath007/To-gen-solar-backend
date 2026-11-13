@@ -37,7 +37,21 @@ export const createCustomerSchema = z.object({
 
   pan: z.string().max(50).optional().nullable().or(z.literal('')),
 
-  customer_type: z.enum(['Individual', 'Business', 'Government', 'Other']).optional().default('Individual'),
+  customer_type: z
+    .enum([
+      'Individual',
+      'Company',
+      'Business',
+      'Commercial',
+      'Industrial',
+      'Agricultural',
+      'Government',
+      'Residential',
+      'Other',
+    ])
+    .or(z.string().max(50))
+    .optional()
+    .default('Individual'),
 
   company_name: z.string().max(255).optional().nullable().or(z.literal('')),
 

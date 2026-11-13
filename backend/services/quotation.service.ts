@@ -467,8 +467,8 @@ function resolveOrCreateManualCustomer(
     const phoneToInsert = cleanPhone || '0000000000';
     const custInsert = db.prepare(`
       INSERT INTO customers (name, phone, email, address, city, customer_type, business_category)
-      VALUES (?, ?, ?, ?, ?, 'Individual', ?)
-    `).run(cleanName, phoneToInsert, cleanEmail, rawAddress || null, cleanCity || null, data.business_category || null);
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(cleanName, phoneToInsert, cleanEmail, rawAddress || null, cleanCity || null, (data as any).manual_customer_type || 'Individual', data.business_category || null);
     customerId = custInsert.lastInsertRowid as number;
   }
 

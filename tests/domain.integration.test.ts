@@ -31,4 +31,19 @@ describe('Migrated domain end-to-end',()=>{
   const restored=hydrate(snapshot(db));
   try {await domainContext.run(restored,async()=>{const next=good(await operations['customers.create']({name:'Second',phone:'9234567890'}));expect(next.id).toBeGreaterThan(c.id);});}finally{restored.close();}
  }));
+ it('supports all customer types (Individual, Company, Commercial, Industrial, Agricultural, Government, Other)', async () => run(async () => {
+  const types = ['Individual', 'Company', 'Commercial', 'Industrial', 'Agricultural', 'Government', 'Other'];
+  let phoneBase = 9500000000;
+  for (const t of types) {
+   const created = good(await operations['customers.create']({
+    name: `Customer ${t}`,
+    phone: String(phoneBase++),
+    customer_type: t,
+    company_name: t !== 'Individual' ? `${t} Pvt Ltd` : null,
+   }));
+   expect(created.customer_type).toBe(t);
+   const fetched = good(await operations['customers.get'](created.id));
+   expect(fetched.customer_type).toBe(t);
+  }
+ }));
 });
