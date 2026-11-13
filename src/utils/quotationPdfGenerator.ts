@@ -1178,142 +1178,144 @@ export async function generateQuotationPdfPagesHtml(
   `;
 
   // Page 2 Table Rows: Dynamically customized for each business category
+  const labelColStyle = 'width: 35%; padding: 7.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px; vertical-align: middle;';
+  const valColStyle = 'width: 65%; padding: 7.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px; vertical-align: middle;';
   let projectDetailRowsHtml = '';
 
   if (isCctv) {
     projectDetailRowsHtml = `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Proposed Solar System</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.proposedSystem || 'Solar CCTV Camera System'}</td>
+        <td style="${labelColStyle}">Proposed Solar System</td>
+        <td style="${valColStyle}">${qData.proposedSystem || 'Solar CCTV Camera System'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Camera Model & Make</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.panelType || 'HD Solar Camera'}</td>
+        <td style="${labelColStyle}">Camera Model & Make</td>
+        <td style="${valColStyle}">${qData.panelType || 'HD Solar Camera'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Storage / Memory Card</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.pvModuleCapacity || '128 GB MicroSD'}</td>
+        <td style="${labelColStyle}">Storage / Memory Card</td>
+        <td style="${valColStyle}">${qData.pvModuleCapacity || '128 GB MicroSD'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Connectivity Type</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.inverterCapacity || 'Wi-Fi / 4G SIM'}</td>
+        <td style="${labelColStyle}">Connectivity Type</td>
+        <td style="${valColStyle}">${qData.inverterCapacity || 'Wi-Fi / 4G SIM'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Mounting / Bracket Structure</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.mountingStructure}</td>
+        <td style="${labelColStyle}">Mounting / Bracket Structure</td>
+        <td style="${valColStyle}">${qData.mountingStructure}</td>
       </tr>
       ${qData.spaceRequired ? `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Space Reqd. for Installation</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.spaceRequired}</td>
+        <td style="${labelColStyle}">Space Reqd. for Installation</td>
+        <td style="${valColStyle}">${qData.spaceRequired}</td>
       </tr>` : ''}
     `;
   } else if (isWaterPump) {
     projectDetailRowsHtml = `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Proposed Solar System</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.proposedSystem || 'Solar Water Pump System'}</td>
+        <td style="${labelColStyle}">Proposed Solar System</td>
+        <td style="${valColStyle}">${qData.proposedSystem || 'Solar Water Pump System'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Solar Drive (VFD) Model</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.inverterCapacity || 'Solar VFD Controller'}</td>
+        <td style="${labelColStyle}">Solar Drive (VFD) Model</td>
+        <td style="${valColStyle}">${qData.inverterCapacity || 'Solar VFD Controller'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Mounting Structure Type & Height</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.mountingStructure}</td>
+        <td style="${labelColStyle}">Mounting Structure Type & Height</td>
+        <td style="${valColStyle}">${qData.mountingStructure}</td>
       </tr>
       ${qData.spaceRequired ? `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Space Reqd. for Installation</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.spaceRequired}</td>
+        <td style="${labelColStyle}">Space Reqd. for Installation</td>
+        <td style="${valColStyle}">${qData.spaceRequired}</td>
       </tr>` : ''}
     `;
   } else if (isStreetLight) {
     projectDetailRowsHtml = `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Proposed Solar System</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.proposedSystem || 'Solar Street Light System'}</td>
+        <td style="${labelColStyle}">Proposed Solar System</td>
+        <td style="${valColStyle}">${qData.proposedSystem || 'Solar Street Light System'}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Wattage & Type</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${(qData.pvModuleCapacity || '').replace(/\s*Luminaire/gi, '')}${qData.inverterCapacity ? ` (${qData.inverterCapacity})` : ''}</td>
+        <td style="${labelColStyle}">Wattage & Type</td>
+        <td style="${valColStyle}">${(qData.pvModuleCapacity || '').replace(/\s*Luminaire/gi, '')}${qData.inverterCapacity ? ` (${qData.inverterCapacity})` : ''}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Solar PV Panel Type</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.panelType}</td>
+        <td style="${labelColStyle}">Solar PV Panel Type</td>
+        <td style="${valColStyle}">${qData.panelType}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Pole Structure & Height</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.mountingStructure}</td>
+        <td style="${labelColStyle}">Pole Structure & Height</td>
+        <td style="${valColStyle}">${qData.mountingStructure}</td>
       </tr>
       ${qData.spaceRequired ? `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Space Reqd. for Installation</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.spaceRequired}</td>
+        <td style="${labelColStyle}">Space Reqd. for Installation</td>
+        <td style="${valColStyle}">${qData.spaceRequired}</td>
       </tr>` : ''}
     `;
   } else if (isIC) {
     projectDetailRowsHtml = `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Proposed Solar Service</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">Solar Installation & Commissioning (I&C)</td>
+        <td style="${labelColStyle}">Proposed Solar Service</td>
+        <td style="${valColStyle}">Solar Installation & Commissioning (I&C)</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">System Capacity</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${getFormattedCapacity()}</td>
+        <td style="${labelColStyle}">System Capacity</td>
+        <td style="${valColStyle}">${getFormattedCapacity()}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Service Scope</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">Complete Module Mounting, Structure Assembly, Cabling, Inverter Termination & Pre-Commissioning Testing</td>
+        <td style="${labelColStyle}">Service Scope</td>
+        <td style="${valColStyle}">Complete Module Mounting, Structure Assembly, Cabling, Inverter Termination & Pre-Commissioning Testing</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Execution Methodology</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">Standard Engineering Practice & Grid Synchronization</td>
+        <td style="${labelColStyle}">Execution Methodology</td>
+        <td style="${valColStyle}">Standard Engineering Practice & Grid Synchronization</td>
       </tr>
     `;
   } else {
     // Rooftop / Standard Solar System
     projectDetailRowsHtml = `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Mounting Structure Type</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.mountingStructure}</td>
+        <td style="${labelColStyle}">Mounting Structure Type</td>
+        <td style="${valColStyle}">${qData.mountingStructure}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Photovoltaic Panel Type</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.panelType}</td>
+        <td style="${labelColStyle}">Photovoltaic Panel Type</td>
+        <td style="${valColStyle}">${qData.panelType}</td>
       </tr>
       ${qData.spaceRequired ? `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Space Reqd. for Installation</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.spaceRequired}</td>
+        <td style="${labelColStyle}">Space Reqd. for Installation</td>
+        <td style="${valColStyle}">${qData.spaceRequired}</td>
       </tr>` : ''}
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Proposed Solar System</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.proposedSystem}</td>
+        <td style="${labelColStyle}">Proposed Solar System</td>
+        <td style="${valColStyle}">${qData.proposedSystem}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Capacity of PV module for Main Building</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.pvModuleCapacity}</td>
+        <td style="${labelColStyle}">Capacity of PV module for Main Building</td>
+        <td style="${valColStyle}">${qData.pvModuleCapacity}</td>
       </tr>
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Capacity of Inverter for Main Building</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.inverterCapacity}</td>
+        <td style="${labelColStyle}">Capacity of Inverter for Main Building</td>
+        <td style="${valColStyle}">${qData.inverterCapacity}</td>
       </tr>
       ${(qData.batteryType || qData.batteryCapacity) ? `
       <tr>
-        <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Battery Bank Capacity & Type</td>
-        <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.batteryType || 'Battery'} ${qData.batteryCapacity ? `${qData.batteryCapacity} Ah` : ''} ${qData.batteryQuantity ? `(${qData.batteryQuantity} Nos)` : ''}</td>
+        <td style="${labelColStyle}">Battery Bank Capacity & Type</td>
+        <td style="${valColStyle}">${qData.batteryType || 'Battery'} ${qData.batteryCapacity ? `${qData.batteryCapacity} Ah` : ''} ${qData.batteryQuantity ? `(${qData.batteryQuantity} Nos)` : ''}</td>
       </tr>` : ''}
     `;
   }
 
   const technicalBomHeadersHtml = `
     <tr style="background-color: #0f2b48; color: #ffffff;">
-      <th style="border: 1px solid #1e3a5f; padding: 7px 6px; text-align: center; width: 8%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Sl. No</th>
-      <th style="border: 1px solid #1e3a5f; padding: 7px 8px; text-align: left; width: 23%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Product</th>
-      <th style="border: 1px solid #1e3a5f; padding: 7px 8px; text-align: left; width: 24%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Make</th>
-      <th style="border: 1px solid #1e3a5f; padding: 7px 8px; text-align: left; width: 35%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Specification</th>
-      <th style="border: 1px solid #1e3a5f; padding: 7px 6px; text-align: center; width: 10%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Qty</th>
+      <th style="border: 1px solid #1e3a5f; padding: 7.5px 6px; text-align: center; width: 6%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Sl. No</th>
+      <th style="border: 1px solid #1e3a5f; padding: 7.5px 10px; text-align: left; width: 28%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Product</th>
+      <th style="border: 1px solid #1e3a5f; padding: 7.5px 10px; text-align: left; width: 18%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Make</th>
+      <th style="border: 1px solid #1e3a5f; padding: 7.5px 10px; text-align: left; width: 38%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Specification</th>
+      <th style="border: 1px solid #1e3a5f; padding: 7.5px 6px; text-align: center; width: 10%; font-weight: 800; box-sizing: border-box; font-size: 10.5px;">Qty</th>
     </tr>
   `;
 
@@ -1365,11 +1367,11 @@ export async function generateQuotationPdfPagesHtml(
     const { cleanProduct, cleanSpec, cleanQty } = sanitizeBomRow(product, spec, qty);
     return `
     <tr style="${isEven ? 'background-color: #fafbfc;' : ''}">
-      <td style="border: 1px solid #d9e6ed; padding: 6px 6px; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; box-sizing: border-box; vertical-align: middle; font-size: 10.5px;">${slNo}</td>
-      <td style="border: 1px solid #d9e6ed; padding: 6px 8px; font-weight: 800; color: #008289; background: #f8fafc; box-sizing: border-box; vertical-align: middle; word-break: break-word; font-size: 10.5px;">${cleanProduct}</td>
-      <td style="border: 1px solid #d9e6ed; padding: 6px 8px; color: #1e293b; box-sizing: border-box; vertical-align: middle; word-break: break-word; font-size: 10.5px;">${finalMake}</td>
-      <td style="border: 1px solid #d9e6ed; padding: 6px 8px; color: #1e293b; box-sizing: border-box; vertical-align: middle; word-break: break-word; line-height: 1.35; font-size: 10.5px;">${cleanSpec}</td>
-      <td style="border: 1px solid #d9e6ed; padding: 6px 6px; text-align: center; font-weight: 700; color: #0f2b48; background: #f8fafc; box-sizing: border-box; vertical-align: middle; font-size: 10.5px;">${cleanQty}</td>
+      <td style="border: 1px solid #d9e6ed; padding: 7.5px 6px; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; box-sizing: border-box; vertical-align: middle; font-size: 10.5px;">${slNo}</td>
+      <td style="border: 1px solid #d9e6ed; padding: 7.5px 10px; font-weight: 800; color: #008289; background: #f8fafc; box-sizing: border-box; vertical-align: middle; word-break: break-word; font-size: 10.5px;">${cleanProduct}</td>
+      <td style="border: 1px solid #d9e6ed; padding: 7.5px 10px; color: #1e293b; box-sizing: border-box; vertical-align: middle; word-break: break-word; font-size: 10.5px;">${finalMake}</td>
+      <td style="border: 1px solid #d9e6ed; padding: 7.5px 10px; color: #1e293b; box-sizing: border-box; vertical-align: middle; word-break: break-word; line-height: 1.4; font-size: 10.5px;">${cleanSpec}</td>
+      <td style="border: 1px solid #d9e6ed; padding: 7.5px 6px; text-align: center; font-weight: 700; color: #0f2b48; background: #f8fafc; box-sizing: border-box; vertical-align: middle; font-size: 10.5px;">${cleanQty}</td>
     </tr>`;
   };
 
@@ -1609,33 +1611,33 @@ export async function generateQuotationPdfPagesHtml(
       ${renderHeader()}
       ${renderWatermark()}
 
-      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 22px; margin-bottom: 12px;">
+      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 20px; margin-bottom: 12px;">
         <!-- Section 1: Project Details -->
         <div style="flex-shrink: 0;">
-          <div style="background: #0f2b48; color: #ffffff; padding: 7px 12px; border-radius: 5px 5px 0 0; margin-bottom: 0;">
+          <div style="background: #0f2b48; color: #ffffff; padding: 7.5px 12px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
             <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px;">PROJECT DETAILS</span>
           </div>
 
           <table style="table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 11px; border: 1px solid #d9e6ed; border-top: none; box-sizing: border-box; word-break: break-word;">
             <tbody>
               <tr>
-                <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Solution Provider</td>
-                <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">
+                <td style="${labelColStyle}">Solution Provider</td>
+                <td style="${valColStyle}">
                   <b>${qData.solutionProvider || 'TO-GEN SOLAR AGRO'}</b><br/>
                   <span style="font-size: 9.5px; color: #475569; font-weight: 600;">3/584-H, Mathur Village, Velliyankundram Group Via, Alagarkoil, Madurai – 625301</span>
                 </td>
               </tr>
               <tr>
-                <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Customer Name</td>
-                <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.customerName}</td>
+                <td style="${labelColStyle}">Customer Name</td>
+                <td style="${valColStyle}">${qData.customerName}</td>
               </tr>
               <tr>
-                <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">${docDateRowLabel}</td>
-                <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.quotationNo}/${qData.quotationDate}</td>
+                <td style="${labelColStyle}">${docDateRowLabel}</td>
+                <td style="${valColStyle}">${qData.quotationNo} / ${qData.quotationDate}</td>
               </tr>
               <tr>
-                <td style="width: 35%; padding: 6.5px 12px; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: 11px;">Customer / Site Address</td>
-                <td style="width: 65%; padding: 6.5px 12px; font-weight: 800; color: #0f2b48; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; font-size: 11px;">${qData.siteAddress}</td>
+                <td style="${labelColStyle}">Customer / Site Address</td>
+                <td style="${valColStyle}">${qData.siteAddress}</td>
               </tr>
               ${projectDetailRowsHtml}
             </tbody>
@@ -1644,7 +1646,7 @@ export async function generateQuotationPdfPagesHtml(
 
         <!-- Section 2: Technical Details (Standard BOM) -->
         <div style="flex-shrink: 0;">
-          <div style="background: #0f2b48; color: #ffffff; padding: 7px 12px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
+          <div style="background: #0f2b48; color: #ffffff; padding: 7.5px 12px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
             <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px;">TECHNICAL DETAILS</span>
           </div>
 
@@ -1659,7 +1661,7 @@ export async function generateQuotationPdfPagesHtml(
         </div>
 
         <!-- High-res Solar Solutions Showcase Banner -->
-        <div style="text-align: center; box-sizing: border-box; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; height: 105px; overflow: hidden; margin-top: auto; margin-bottom: 10px;">
+        <div style="text-align: center; box-sizing: border-box; background: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 100%; height: 110px; overflow: hidden; margin-top: auto; margin-bottom: 8px;">
           <img src="${systemBlockDiagram}" style="width: 100%; height: 100%; object-fit: contain; display: block; margin: 0 auto; image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;" alt="ToGen Solar Agro Products and Systems Banner" />
         </div>
       </div>
@@ -1679,15 +1681,16 @@ export async function generateQuotationPdfPagesHtml(
     let rowsHtml = '';
     let calculatedSubtotal = 0;
 
-    const rowPadding = isCompact ? '7px 6px' : '14px 6px';
-    const descPadding = isCompact ? '7px 12px' : '14px 14px';
-    const descLineHeight = isCompact ? '1.45' : '1.6';
+    // Visual padding: proportional commercial quotation sizing
+    const rowPadding = isCompact ? '7.5px 6px' : '9.5px 6px';
+    const descPadding = isCompact ? '7.5px 12px' : '9.5px 12px';
     const descFontSize = isCompact ? '10.5px' : '11px';
-    const pricePadding = isCompact ? '7px 10px' : '14px 10px';
-    const totalRowPadding = isCompact ? '6px 12px' : '9.5px 12px';
-    const totalRowPricePadding = isCompact ? '6px 10px' : '9.5px 10px';
-    const grandRowPadding = isCompact ? '7px 12px' : '10px 12px';
-    const grandRowPricePadding = isCompact ? '7px 10px' : '10px 10px';
+    const descLineHeight = isCompact ? '1.4' : '1.5';
+    const pricePadding = isCompact ? '7.5px 10px' : '9.5px 10px';
+    const totalRowPadding = isCompact ? '7.5px 12px' : '9.5px 12px';
+    const totalRowPricePadding = isCompact ? '7.5px 10px' : '9.5px 10px';
+    const grandRowPadding = isCompact ? '8px 12px' : '10px 12px';
+    const grandRowPricePadding = isCompact ? '8px 10px' : '10px 10px';
 
     if (isIC) {
       const singleBase = (qData.subtotal !== undefined && qData.subtotal > 0)
@@ -1700,12 +1703,12 @@ export async function generateQuotationPdfPagesHtml(
 
       rowsHtml = `
         <tr>
-          <td style="border: 1px solid #d9e6ed; padding: ${rowPadding}; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; vertical-align: top; box-sizing: border-box;">1</td>
-          <td style="border: 1px solid #d9e6ed; padding: ${descPadding}; line-height: ${descLineHeight}; color: #1e293b; text-align: justify; vertical-align: top; box-sizing: border-box; font-size: ${descFontSize}; word-break: normal; overflow-wrap: break-word;">
+          <td style="border: 1px solid #d9e6ed; padding: ${rowPadding}; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; vertical-align: middle; box-sizing: border-box;">1</td>
+          <td style="border: 1px solid #d9e6ed; padding: ${descPadding}; line-height: ${descLineHeight}; color: #1e293b; text-align: left; vertical-align: middle; box-sizing: border-box; font-size: ${descFontSize}; word-break: normal; overflow-wrap: break-word;">
             <b>Solar Installation & Commissioning (I&C) Services${icCapacityDisplay ? ` – ${icCapacityDisplay}` : ''}</b><br/>
             Design, Engineering, Installation and Commissioning (I&C) of ${icCapacityDisplay ? `${icCapacityDisplay} ` : ''}Solar System – Complete mechanical mounting, electrical cabling & terminations, inverter installation, earthing and pre-commissioning testing to grid synchronization.
           </td>
-          <td style="border: 1px solid #d9e6ed; padding: ${pricePadding}; text-align: right; font-weight: 900; font-size: ${isUnderReview ? '11px' : '13px'}; color: ${isUnderReview ? '#d97706' : '#008289'}; vertical-align: top; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
+          <td style="border: 1px solid #d9e6ed; padding: ${pricePadding}; text-align: right; font-weight: 900; font-size: ${isUnderReview ? '11px' : '13px'}; color: ${isUnderReview ? '#d97706' : '#008289'}; vertical-align: middle; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
             ${rateText}
           </td>
         </tr>
@@ -1726,11 +1729,11 @@ export async function generateQuotationPdfPagesHtml(
 
         return `
           <tr>
-            <td style="border: 1px solid #d9e6ed; padding: ${rowPadding}; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; vertical-align: top; box-sizing: border-box;">${idx + 1}</td>
-            <td style="border: 1px solid #d9e6ed; padding: ${descPadding}; line-height: ${descLineHeight}; color: #1e293b; text-align: justify; vertical-align: top; box-sizing: border-box; font-size: ${descFontSize}; word-break: normal; overflow-wrap: break-word;">
+            <td style="border: 1px solid #d9e6ed; padding: ${rowPadding}; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; vertical-align: middle; box-sizing: border-box;">${idx + 1}</td>
+            <td style="border: 1px solid #d9e6ed; padding: ${descPadding}; line-height: ${descLineHeight}; color: #1e293b; text-align: left; vertical-align: middle; box-sizing: border-box; font-size: ${descFontSize}; word-break: normal; overflow-wrap: break-word;">
               ${descParagraph}
             </td>
-            <td style="border: 1px solid #d9e6ed; padding: ${pricePadding}; text-align: right; font-weight: 900; font-size: 13px; color: #008289; vertical-align: top; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
+            <td style="border: 1px solid #d9e6ed; padding: ${pricePadding}; text-align: right; font-weight: 900; font-size: 13px; color: #008289; vertical-align: middle; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
               ${rateStr}
             </td>
           </tr>
@@ -1741,15 +1744,15 @@ export async function generateQuotationPdfPagesHtml(
       calculatedSubtotal = singleBase;
       rowsHtml = `
         <tr>
-          <td style="border: 1px solid #d9e6ed; padding: ${rowPadding}; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; vertical-align: top; box-sizing: border-box;">1</td>
-          <td style="border: 1px solid #d9e6ed; padding: ${descPadding}; line-height: ${descLineHeight}; color: #1e293b; text-align: justify; vertical-align: top; box-sizing: border-box; font-size: ${descFontSize}; word-break: normal; overflow-wrap: break-word;">
+          <td style="border: 1px solid #d9e6ed; padding: ${rowPadding}; text-align: center; font-weight: 800; background: #edf6f9; color: #008289; vertical-align: middle; box-sizing: border-box;">1</td>
+          <td style="border: 1px solid #d9e6ed; padding: ${descPadding}; line-height: ${descLineHeight}; color: #1e293b; text-align: left; vertical-align: middle; box-sizing: border-box; font-size: ${descFontSize}; word-break: normal; overflow-wrap: break-word;">
             ${qData.commercialDescription || (() => {
               const s = formatSystemTypeForCommercials(qData.systemType, qData.businessCategory);
               const fullLabel = s.toLowerCase().startsWith('solar') ? s : `Solar ${s}`;
               return `Design, Engineering, Supply and Commissioning of ${fullLabel}.`;
             })()}
           </td>
-          <td style="border: 1px solid #d9e6ed; padding: ${pricePadding}; text-align: right; font-weight: 900; font-size: 13px; color: #008289; vertical-align: top; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
+          <td style="border: 1px solid #d9e6ed; padding: ${pricePadding}; text-align: right; font-weight: 900; font-size: 13px; color: #008289; vertical-align: middle; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
             ${singleBase > 0 ? `${singleBase.toLocaleString('en-IN')}/-` : (qData.totalPrice || 'AS QUOTED')}
           </td>
         </tr>
@@ -1772,10 +1775,13 @@ export async function generateQuotationPdfPagesHtml(
     }
 
     const rawTaxPct = finalSubtotalVal > 0 ? (finalTaxVal / finalSubtotalVal) * 100 : 18;
-    const taxPct = Math.abs(rawTaxPct - Math.round(rawTaxPct)) < 0.05
-      ? Math.round(rawTaxPct)
-      : Number(rawTaxPct.toFixed(2));
-    const halfTaxPct = Number((taxPct / 2).toFixed(2));
+    let taxPct = Number(rawTaxPct.toFixed(2));
+    if (Math.abs(taxPct - 25) < 0.8) taxPct = 25;
+    else if (Math.abs(taxPct - 18) < 0.8) taxPct = 18;
+    else if (Math.abs(taxPct - 12) < 0.8) taxPct = 12;
+    else if (Math.abs(taxPct - 5) < 0.8) taxPct = 5;
+
+    const halfTaxPct = taxPct % 2 === 0 ? (taxPct / 2).toString() : (taxPct / 2).toFixed(1);
     const gstLabel = taxPct > 0 ? `GST (${halfTaxPct}% + ${halfTaxPct}%)` : `GST (0%)`;
 
     // Grand Total resolution (Total + GST)
@@ -1795,27 +1801,27 @@ export async function generateQuotationPdfPagesHtml(
     return `
       ${rowsHtml}
       <tr>
-        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #edf6f9; color: #0f2b48; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">${qData.tax_inclusive ? 'BASE AMOUNT' : 'TOTAL'}</td>
-        <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '11.5px' : '12.5px'}; color: #0f2b48; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
+        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #edf6f9; color: #0f2b48; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">${qData.tax_inclusive ? 'BASE AMOUNT' : 'TOTAL'}</td>
+        <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '11.5px' : '12.5px'}; color: #0f2b48; vertical-align: middle; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
           ${qData.tax_inclusive ? `${Math.max(0, finalGrandTotalVal - finalTaxVal).toLocaleString('en-IN')}/-` : totalDisplay}
         </td>
       </tr>
       <tr>
-        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #edf6f9; color: #0f2b48; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">${gstLabel}${qData.tax_inclusive ? ' [Included]' : ''}</td>
-        <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '11.5px' : '12.5px'}; color: #0f2b48; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
+        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #edf6f9; color: #0f2b48; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">${gstLabel}${qData.tax_inclusive ? ' [Included]' : ''}</td>
+        <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '11.5px' : '12.5px'}; color: #0f2b48; vertical-align: middle; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
           ${taxDisplay}
         </td>
       </tr>
       <tr>
-        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${grandRowPadding}; text-align: right; font-weight: 900; background: #edf6f9; color: #0f2b48; box-sizing: border-box; font-size: ${isCompact ? '11px' : '12px'};">GRAND TOTAL</td>
-        <td style="border: 1px solid #d9e6ed; padding: ${grandRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '13px' : '14px'}; color: #008289; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
+        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${grandRowPadding}; text-align: right; font-weight: 900; background: #edf6f9; color: #0f2b48; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? '11px' : '12px'};">GRAND TOTAL</td>
+        <td style="border: 1px solid #d9e6ed; padding: ${grandRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '13px' : '14px'}; color: #008289; vertical-align: middle; background: #f8fafc; box-sizing: border-box; white-space: nowrap;">
           ${grandDisplay}
         </td>
       </tr>
       ${totalSubsidy > 0 ? `
         <tr>
-          <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #fff7ed; color: #c2410c; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">State Subsidy + Central Subsidy</td>
-          <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '12px' : '13px'}; color: #c2410c; background: #fff7ed; box-sizing: border-box; white-space: nowrap;">
+          <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #fff7ed; color: #c2410c; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">State Subsidy + Central Subsidy</td>
+          <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '12px' : '13px'}; color: #c2410c; vertical-align: middle; background: #fff7ed; box-sizing: border-box; white-space: nowrap;">
             ${totalSubsidy.toLocaleString('en-IN')}/-
           </td>
         </tr>
@@ -1824,16 +1830,16 @@ export async function generateQuotationPdfPagesHtml(
   };
 
   const renderCommercialsTableBlock = (isCompact = false) => `
-    <div style="background: #0f2b48; color: #ffffff; padding: ${isCompact ? '7px 14px' : '9px 16px'}; border-radius: ${isCompact ? '5px 5px 0 0' : '6px 6px 0 0'}; text-align: center; margin-bottom: 0;">
-      <span style="font-size: ${isCompact ? '14px' : '15.5px'}; font-weight: 800; letter-spacing: ${isCompact ? '0.8px' : '1px'};">COMMERCIALS</span>
+    <div style="background: #0f2b48; color: #ffffff; padding: ${isCompact ? '7.5px 14px' : '9px 16px'}; border-radius: ${isCompact ? '5px 5px 0 0' : '6px 6px 0 0'}; text-align: center; margin-bottom: 0;">
+      <span style="font-size: ${isCompact ? '13px' : '15px'}; font-weight: 800; letter-spacing: ${isCompact ? '0.8px' : '1px'};">COMMERCIALS</span>
     </div>
 
     <table style="table-layout: fixed; width: 100%; border-collapse: collapse; margin-bottom: ${isCompact ? '0' : '12px'}; font-size: ${isCompact ? '10.5px' : '11px'}; border: 1px solid #d9e6ed; border-top: none; box-sizing: border-box; word-break: break-word;">
       <thead>
         <tr style="background-color: #0f2b48; color: #ffffff;">
-          <th style="border: 1px solid #1e3a5f; padding: ${isCompact ? '6px 6px' : '8px 6px'}; text-align: center; width: 8%; font-weight: 800; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">Sl. No</th>
-          <th style="border: 1px solid #1e3a5f; padding: ${isCompact ? '6px 12px' : '8px 12px'}; text-align: left; width: 70%; font-weight: 800; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">Description</th>
-          <th style="border: 1px solid #1e3a5f; padding: ${isCompact ? '6px 10px' : '8px 10px'}; text-align: right; width: 22%; font-weight: 800; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">Total Price (INR)</th>
+          <th style="border: 1px solid #1e3a5f; padding: ${isCompact ? '7.5px 6px' : '8.5px 6px'}; text-align: center; width: 6%; font-weight: 800; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">Sl. No</th>
+          <th style="border: 1px solid #1e3a5f; padding: ${isCompact ? '7.5px 12px' : '8.5px 12px'}; text-align: left; width: 72%; font-weight: 800; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">Description</th>
+          <th style="border: 1px solid #1e3a5f; padding: ${isCompact ? '7.5px 10px' : '8.5px 10px'}; text-align: right; width: 22%; font-weight: 800; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">Total Price (INR)</th>
         </tr>
       </thead>
       <tbody>
@@ -1868,9 +1874,9 @@ export async function generateQuotationPdfPagesHtml(
       expiryDateStr = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
     }
 
-    const pad = _withSignAndBank ? '5px 10px' : '11.5px 16px';
-    const fSize = _withSignAndBank ? '10px' : '12px';
-    const lHeight = _withSignAndBank ? '1.38' : '1.55';
+    const pad = _withSignAndBank ? '5px 10px' : '7.5px 12px';
+    const fSize = _withSignAndBank ? '10px' : '10.5px';
+    const lHeight = _withSignAndBank ? '1.38' : '1.45';
 
     if (isJson) {
       termsHtml = termsArr.map((term: any, idx: number) => {
@@ -1890,8 +1896,8 @@ export async function generateQuotationPdfPagesHtml(
         const safeVal = val.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return `
         <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#fafbfc'};">
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize};">${term.key}</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; white-space: pre-wrap; word-wrap: break-word; line-height: ${lHeight}; font-size: ${fSize};">${safeVal}</td>
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize}; vertical-align: top;">${term.key}</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; white-space: pre-wrap; word-wrap: break-word; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">${safeVal}</td>
         </tr>
         `;
       }).join('');
@@ -1899,18 +1905,18 @@ export async function generateQuotationPdfPagesHtml(
       // Legacy Hardcoded Rendering
       termsHtml = `
         <tr>
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize};">Quote Validity</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize};">Valid up to ${expiryDateStr} (${validityDays} Days from the date of submission)</td>
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize}; vertical-align: top;">Quote Validity</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">Valid up to ${expiryDateStr} (${validityDays} Days from the date of submission)</td>
         </tr>
         ${qData.payment_terms ? `
         <tr style="background-color: #fafbfc;">
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize};">Payment Terms</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; white-space: pre-wrap; word-wrap: break-word; line-height: ${lHeight}; font-size: ${fSize};">${qData.payment_terms.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize}; vertical-align: top;">Payment Terms</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; white-space: pre-wrap; word-wrap: break-word; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">${qData.payment_terms.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</td>
         </tr>
         ` : `
         <tr style="background-color: #fafbfc;">
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize};">Payment Terms</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; font-size: ${fSize}; line-height: ${lHeight};">
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize}; vertical-align: top;">Payment Terms</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; font-size: ${fSize}; line-height: ${lHeight}; vertical-align: top;">
             1. 10% along with confirmed work order (Material Procurement Advance)<br/>
             2. 80% against delivery of materials at site<br/>
             3. 10% after successful testing, commissioning & handing over
@@ -1918,16 +1924,16 @@ export async function generateQuotationPdfPagesHtml(
         </tr>
         `}
         <tr>
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize};">Delivery Period</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize};">3 - 4 Weeks from the date of technically and commercially clear work order</td>
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize}; vertical-align: top;">Delivery Period</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">3 - 4 Weeks from the date of technically and commercially clear work order</td>
         </tr>
         <tr style="background-color: #fafbfc;">
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize};">Freight & Transit Insurance</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize};">Included</td>
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">Freight & Transit Insurance</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">Included</td>
         </tr>
         <tr>
-          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize};">Warranty</td>
-          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize};">
+          <td style="width: 32%; padding: ${pad}; font-weight: 800; color: #008289; border: 1px solid #d9e6ed; background: #edf6f9; box-sizing: border-box; font-size: ${fSize}; vertical-align: top;">Warranty</td>
+          <td style="width: 68%; padding: ${pad}; color: #1e293b; border: 1px solid #d9e6ed; background: #ffffff; box-sizing: border-box; line-height: ${lHeight}; font-size: ${fSize}; vertical-align: top;">
             1. Solar PV Modules: 25 Years performance warranty as per manufacturer terms<br/>
             2. Solar Inverter: 5 Years replacement / repair warranty<br/>
             3. Whole System Installation: 5 Years comprehensive system warranty
@@ -2074,13 +2080,13 @@ export async function generateQuotationPdfPagesHtml(
 
         <!-- Section 2: Commercial Terms & Conditions -->
         <div style="flex-shrink: 0;">
-          <div style="background: #0f2b48; color: #ffffff; padding: 6px 14px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
+          <div style="background: #0f2b48; color: #ffffff; padding: 7.5px 14px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
             <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px;">COMMERCIAL TERMS AND CONDITIONS</span>
           </div>
 
-          <table style="table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 10px; border: 1.5px solid #0f2b48; border-top: none; box-sizing: border-box; word-break: break-word; background: #ffffff;">
+          <table style="table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 10.5px; border: 1px solid #d9e6ed; border-top: none; box-sizing: border-box; word-break: break-word; background: #ffffff;">
             <tbody>
-              ${buildCommercialTermsRowsHtml(true)}
+              ${buildCommercialTermsRowsHtml(false)}
             </tbody>
           </table>
         </div>
