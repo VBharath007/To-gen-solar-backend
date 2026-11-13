@@ -82,15 +82,12 @@ async function ensureWarmInstance(): Promise<{ worker: Page; print: Page }> {
     await workerPage.setContent(
       '<html><head><script>var __name = (t, v) => t; window.__name = (t, v) => t; globalThis.__name = (t, v) => t;</script></head><body></body></html>'
     );
-    let pdfBrowserPath = existsSync(resolve(currentDir, '../dist/pdf-browser.js'))
+    const targetOut = existsSync(resolve(currentDir, '../dist'))
       ? resolve(currentDir, '../dist/pdf-browser.js')
-      : (existsSync(resolve('server/dist/pdf-browser.js'))
-          ? resolve('server/dist/pdf-browser.js')
-          : resolve('dist/pdf-browser.js'));
+      : resolve(currentDir, '../../dist/pdf-browser.js');
 
-    if (!existsSync(pdfBrowserPath)) {
-      console.log('[PDF] dist/pdf-browser.js not found, auto-building with esbuild...');
-      const targetOut = resolve(currentDir, '../dist/pdf-browser.js');
+    try {
+      console.log('[PDF] Compiling latest pdf-browser bundle with esbuild...');
       const { build } = await import('esbuild');
       await build({
         entryPoints: [resolve(currentDir, 'pdf-entry.ts')],
@@ -102,9 +99,16 @@ async function ensureWarmInstance(): Promise<{ worker: Page; print: Page }> {
         loader: { '.png': 'dataurl', '.jpg': 'dataurl', '.jpeg': 'dataurl' },
         tsconfig: resolve(currentDir, '../tsconfig.json'),
       });
-      pdfBrowserPath = targetOut;
-      console.log('[PDF] dist/pdf-browser.js built successfully at:', pdfBrowserPath);
+      console.log('[PDF] Latest pdf-browser bundle compiled successfully at:', targetOut);
+    } catch (bErr) {
+      console.warn('[PDF] Live esbuild compilation notice (falling back to existing bundle if present):', bErr);
     }
+
+    const pdfBrowserPath = existsSync(targetOut)
+      ? targetOut
+      : (existsSync(resolve('server/dist/pdf-browser.js'))
+          ? resolve('server/dist/pdf-browser.js')
+          : resolve('dist/pdf-browser.js'));
 
     await workerPage.addScriptTag({ path: pdfBrowserPath });
 
