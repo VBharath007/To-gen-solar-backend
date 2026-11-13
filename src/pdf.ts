@@ -1,6 +1,6 @@
 import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
 import { resolve } from 'node:path';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const currentDir = fileURLToPath(new URL('.', import.meta.url));
@@ -82,12 +82,14 @@ async function ensureWarmInstance(): Promise<{ worker: Page; print: Page }> {
     await workerPage.setContent(
       '<html><head><script>var __name = (t, v) => t; window.__name = (t, v) => t; globalThis.__name = (t, v) => t;</script></head><body></body></html>'
     );
-    const targetOut = existsSync(resolve(currentDir, '../dist'))
-      ? resolve(currentDir, '../dist/pdf-browser.js')
-      : resolve(currentDir, '../../dist/pdf-browser.js');
+    const distDir = resolve(currentDir, '../dist');
+    if (!existsSync(distDir)) {
+      mkdirSync(distDir, { recursive: true });
+    }
+    const targetOut = resolve(distDir, 'pdf-browser.js');
 
     try {
-      console.log('[PDF] Compiling latest pdf-browser bundle with esbuild...');
+      console.log('[PDF] Compiling latest pdf-browser bundle with esbuild to:', targetOut);
       const { build } = await import('esbuild');
       await build({
         entryPoints: [resolve(currentDir, 'pdf-entry.ts')],

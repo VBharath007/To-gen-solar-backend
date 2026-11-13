@@ -1611,9 +1611,9 @@ export async function generateQuotationPdfPagesHtml(
       ${renderHeader()}
       ${renderWatermark()}
 
-      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 20px; margin-bottom: 12px;">
+      <div style="flex: 1; min-height: 0; z-index: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 24px; margin-bottom: 12px;">
         <!-- Section 1: Project Details -->
-        <div style="flex-shrink: 0;">
+        <div style="flex-shrink: 0; margin-bottom: 18px;">
           <div style="background: #0f2b48; color: #ffffff; padding: 7.5px 12px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
             <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px;">PROJECT DETAILS</span>
           </div>
@@ -1645,7 +1645,7 @@ export async function generateQuotationPdfPagesHtml(
         </div>
 
         <!-- Section 2: Technical Details (Standard BOM) -->
-        <div style="flex-shrink: 0;">
+        <div style="flex-shrink: 0; margin-top: 6px;">
           <div style="background: #0f2b48; color: #ffffff; padding: 7.5px 12px; border-radius: 5px 5px 0 0; text-align: center; margin-bottom: 0;">
             <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px;">TECHNICAL DETAILS</span>
           </div>
