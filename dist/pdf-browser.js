@@ -36268,6 +36268,7 @@ ${indented}`;
   async function toBase642(url) {
     if (!url) return "";
     if (url.startsWith("data:")) return url;
+    if (typeof Image === "undefined") return url;
     return new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -36308,8 +36309,11 @@ ${indented}`;
       totalGST += gst;
       return { ...item, slNo: i3 + 1, gst, grand };
     });
-    const grandTotal = subTotal + totalGST;
+    const grandTotal = data.totalAmount !== void 0 && data.totalAmount > 0 ? data.totalAmount : subTotal + totalGST;
+    const amountPaid = data.amountPaid ?? 0;
+    const balanceDue = data.balanceDue !== void 0 ? data.balanceDue : Math.max(0, grandTotal - amountPaid);
     const amtWords = numberToWords(grandTotal);
+    const hasPaymentInfo = data.amountPaid !== void 0 && data.amountPaid > 0 || isAdvanceReceipt || data.balanceDue !== void 0;
     const terms = data.termsAndConditions ?? (data.notes && data.notes.trim() ? formatNotesToPlainText(data.notes).split("\n").map((s3) => s3.trim()).filter(Boolean) : [
       "Goods once sold cannot be taken back or exchanged.",
       "All disputes are subject to Madurai jurisdiction only.",
@@ -36334,7 +36338,12 @@ ${indented}`;
           </td>
           <td style="width: 42%; vertical-align: top; text-align: right;">
             <div style="font-size: 26px; font-weight: 900; color: #ea580c; letter-spacing: -0.5px; text-transform: uppercase; margin-bottom: 4px;">${headerTitle}</div>
-            <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 10px;"># ${data.invoiceNo}</div>
+            <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">
+              # ${data.invoiceNo}
+              ${data.status ? `
+                <span style="display: inline-block; vertical-align: middle; margin-left: 6px; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; background: ${data.status === "Paid" ? "#ecfdf5" : data.status === "Partial" ? "#fff7ed" : "#fef2f2"}; color: ${data.status === "Paid" ? "#065f46" : data.status === "Partial" ? "#c2410c" : "#991b1b"}; border: 1px solid ${data.status === "Paid" ? "#a7f3d0" : data.status === "Partial" ? "#fed7aa" : "#fecaca"};">${data.status}</span>
+              ` : ""}
+            </div>
             
             <table style="width: 100%; border-collapse: collapse; font-size: 11.5px;">
               <tr>
@@ -36407,22 +36416,38 @@ ${indented}`;
             <div style="background: #f8fafc; border-radius: 6px; padding: 14px 16px; border: 1.5px solid #cbd5e1; box-sizing: border-box;">
               <div style="font-size: 10.5px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">Amount in Words</div>
               <div style="font-weight: 700; color: #0f172a; font-size: 12px; line-height: 1.5;">${amtWords}</div>
+              ${amountPaid > 0 && balanceDue > 0 ? `
+                <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 11px;">
+                  <span style="font-weight: 800; color: #ea580c; text-transform: uppercase; letter-spacing: 0.5px;">Balance Due in Words:</span>
+                  <div style="font-weight: 700; color: #0f172a; margin-top: 2px;">${numberToWords(balanceDue)}</div>
+                </div>
+              ` : ""}
             </div>
           </td>
           <td style="width: 48%; vertical-align: top;">
             <table style="width: 100%; border-collapse: collapse; font-size: 12px; border: 1.5px solid #94a3b8; border-radius: 6px; overflow: hidden; white-space: nowrap; background: #ffffff;">
               <tr style="border-bottom: 1px solid #e2e8f0; white-space: nowrap;">
-                <td style="padding: 8px 12px; color: #334155; font-weight: 600; border-right: 1px solid #e2e8f0; white-space: nowrap;">Sub Total</td>
+                <td style="padding: 8px 12px; color: #334155; font-weight: 600; border-right: 1px solid #e2e8f0; white-space: nowrap;">${data.taxInclusive ? "Taxable Amount" : "Sub Total"}</td>
                 <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; white-space: nowrap;">${fmt(subTotal)}</td>
               </tr>
               <tr style="border-bottom: 1.5px solid #94a3b8; white-space: nowrap; background: #fafbfc;">
-                <td style="padding: 8px 12px; color: #334155; font-weight: 600; border-right: 1px solid #e2e8f0; white-space: nowrap;">Total Tax Amount</td>
+                <td style="padding: 8px 12px; color: #334155; font-weight: 600; border-right: 1px solid #e2e8f0; white-space: nowrap;">Total Tax Amount ${data.taxInclusive ? '<span style="font-size: 10px; color: #64748b; font-weight: 500;">(Included)</span>' : ""}</td>
                 <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; white-space: nowrap;">${fmt(totalGST)}</td>
               </tr>
-              <tr style="white-space: nowrap; background: #eff6ff;">
-                <td style="padding: 10px 12px; color: #1e3a8a; font-weight: 900; font-size: 13.5px; letter-spacing: 0.5px; border-right: 1.5px solid #94a3b8; white-space: nowrap;">GRAND TOTAL</td>
-                <td style="padding: 10px 12px; text-align: right; font-weight: 900; font-size: 16px; color: #c2410c; white-space: nowrap;">${fmt(grandTotal)}</td>
+              <tr style="border-bottom: ${hasPaymentInfo ? "1.5px solid #94a3b8" : "none"}; white-space: nowrap; background: #eff6ff;">
+                <td style="padding: 9px 12px; color: #1e3a8a; font-weight: 900; font-size: 12.5px; letter-spacing: 0.5px; border-right: 1.5px solid #94a3b8; white-space: nowrap;">GRAND TOTAL</td>
+                <td style="padding: 9px 12px; text-align: right; font-weight: 900; font-size: 15px; color: #0f172a; white-space: nowrap;">${fmt(grandTotal)}</td>
               </tr>
+              ${hasPaymentInfo ? `
+                <tr style="border-bottom: 1px solid #e2e8f0; white-space: nowrap; background: #f0fdf4;">
+                  <td style="padding: 8px 12px; color: #166534; font-weight: 800; font-size: 12px; border-right: 1.5px solid #94a3b8; white-space: nowrap;">Amount Paid</td>
+                  <td style="padding: 8px 12px; text-align: right; font-weight: 800; font-size: 13px; color: #15803d; white-space: nowrap;">${fmt(amountPaid)}</td>
+                </tr>
+                <tr style="white-space: nowrap; background: ${balanceDue > 0 ? "#fff7ed" : "#f0fdf4"};">
+                  <td style="padding: 9px 12px; color: ${balanceDue > 0 ? "#c2410c" : "#166534"}; font-weight: 900; font-size: 13px; letter-spacing: 0.5px; border-right: 1.5px solid #94a3b8; white-space: nowrap;">BALANCE DUE</td>
+                  <td style="padding: 9px 12px; text-align: right; font-weight: 900; font-size: 16px; color: ${balanceDue > 0 ? "#ea580c" : "#15803d"}; white-space: nowrap;">${fmt(balanceDue)}</td>
+                </tr>
+              ` : ""}
             </table>
           </td>
         </tr>

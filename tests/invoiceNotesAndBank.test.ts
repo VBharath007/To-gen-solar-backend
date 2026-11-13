@@ -7,6 +7,7 @@ import {
   setInvoiceBankAccountId,
   CANARA_BANK_ACCOUNT
 } from '../src/utils/bankAccountStorage';
+import { generateTaxInvoiceHtml } from '../src/utils/invoicePdfGenerator';
 
 describe('formatNotesToPlainText', () => {
   it('converts quotation payment terms JSON array to clean readable plain text', () => {
@@ -133,6 +134,81 @@ describe('Date Validation Rules on Edit vs Create', () => {
     // Today and future dates should be allowed
     expect('2026-10-14' >= minDate).toBe(true);
     expect('2026-10-15' >= minDate).toBe(true);
+  });
+});
+
+describe('generateTaxInvoiceHtml payment totals and balance due', () => {
+  it('displays Amount Paid and Balance Due dynamically for an Advance Receipt', async () => {
+    const html = await generateTaxInvoiceHtml({
+      invoiceType: 'Advance Receipt',
+      invoiceNo: 'INV-2026-0002',
+      invoiceDate: '13/11/2026',
+      dueDate: '28/11/2026',
+      placeOfSupply: 'Tamil Nadu',
+      billTo: {
+        name: 'Surya',
+        address: 'north street',
+        city: 'Madurai',
+        phone: '9656468654',
+      },
+      items: [
+        {
+          description: 'Exide Solar Tubular 150Ah - 12V 150Ah C10 Deep Cycle Solar Tubular Battery',
+          quantity: 1,
+          unit: '1',
+          unitPrice: 1550000,
+          gstRate: 18,
+          total: 1313559, // taxable base in paise for tax-inclusive
+        },
+      ],
+      amountPaid: 550000, // ₹5,500.00
+      totalAmount: 1550000, // ₹15,500.00
+      balanceDue: 1000000, // ₹10,000.00
+      status: 'Partial',
+      taxInclusive: true,
+    });
+
+    expect(html).toContain('ADVANCE RECEIPT');
+    expect(html).toContain('# INV-2026-0002');
+    expect(html).toContain('Partial');
+    expect(html).toContain('GRAND TOTAL');
+    expect(html).toContain('₹15,500.00');
+    expect(html).toContain('Amount Paid');
+    expect(html).toContain('₹5,500.00');
+    expect(html).toContain('BALANCE DUE');
+    expect(html).toContain('₹10,000.00');
+    expect(html).toContain('Balance Due in Words:');
+    expect(html).toContain('Ten Thousand Rupees Only');
+    expect(html).toContain('(Included)');
+  });
+
+  it('displays correct totals for tax-exclusive invoice', async () => {
+    const html = await generateTaxInvoiceHtml({
+      invoiceType: 'Tax Invoice',
+      invoiceNo: 'INV-2026-0003',
+      invoiceDate: '13/11/2026',
+      billTo: { name: 'Chella Mani' },
+      items: [
+        {
+          description: 'Solar Inverter 5kVA',
+          quantity: 1,
+          unit: '1',
+          unitPrice: 5000000, // ₹50,000.00
+          gstRate: 18,
+          total: 5000000, // taxable base in paise for tax-exclusive
+        },
+      ],
+      taxInclusive: false,
+    });
+
+    expect(html).toContain('TAX INVOICE');
+    expect(html).toContain('Sub Total');
+    expect(html).toContain('₹50,000.00');
+    expect(html).toContain('Total Tax Amount');
+    expect(html).toContain('₹9,000.00');
+    expect(html).toContain('GRAND TOTAL');
+    expect(html).toContain('₹59,000.00');
+    expect(html).toContain('Fifty Nine Thousand Rupees Only');
   });
 });
 

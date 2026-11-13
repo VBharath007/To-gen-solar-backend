@@ -229,6 +229,9 @@ export async function renderPdf(module: string, payload: any): Promise<Buffer> {
           w.__accounts[0];
         if (!bank)
           throw new Error('Add and select your bank account before downloading invoices');
+        const totalAmount = record.total_amount != null ? Number(record.total_amount) : undefined;
+        const amountPaid = record.amount_paid != null ? Number(record.amount_paid) : 0;
+        const balanceDue = totalAmount != null ? Math.max(0, totalAmount - amountPaid) : undefined;
         const invoiceData = {
           invoiceType: record.invoice_type,
           invoiceNo: record.reference,
@@ -261,6 +264,11 @@ export async function renderPdf(module: string, payload: any): Promise<Buffer> {
             ifsc: bank.ifscCode,
             upiId: bank.upiId,
           },
+          amountPaid,
+          totalAmount,
+          balanceDue,
+          status: record.status,
+          taxInclusive: !!record.tax_inclusive,
         };
         return p.generateTaxInvoiceHtml
           ? await p.generateTaxInvoiceHtml(invoiceData)
