@@ -12,7 +12,7 @@ import { uploadToCloudinary } from './cloudinary';
 import { snapshot } from './sql-compat';
 import { getDb } from '../backend/database/connection';
 const app=express();
-app.set('trust proxy', 1);
+app.set('trust proxy', true);
 const webOrigin = process.env.WEB_ORIGIN;
 const corsOrigin = (!webOrigin || webOrigin === '*') ? true : webOrigin.split(',');
 app.disable('x-powered-by');
@@ -28,9 +28,16 @@ app.use(express.json({limit:'12mb'}));
 app.use(rateLimit({
   windowMs: 60000,
   limit: 600,
-  validate: { xForwardedForHeader: false }
+  validate: false,
+  keyGenerator: (req: any) => {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (typeof forwarded === 'string' && forwarded.length > 0) {
+      return forwarded.split(',')[0].trim();
+    }
+    return req.ip || 'client';
+  }
 }));
-app.get('/health',(_,res)=>res.json({status:'ok',version:'1.0.0'}));
+app.get('/health',(_,res)=>res.json({status:'ok',version:'1.0.1'}));
 app.use('/api',async(req:any,res,next)=>{
  if (req.method === 'OPTIONS') return next();
  try {
