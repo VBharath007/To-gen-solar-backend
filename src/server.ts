@@ -39,39 +39,57 @@ app.use(rateLimit({
 }));
 app.get('/health',(_,res)=>res.json({status:'ok',version:'1.0.1'}));
 
+let localDevCreds = { email: 'alagupandi@gmail.com', password: 'password123' };
+
 app.get('/api/auth/credentials', async (_req, res) => {
   try {
-    const db = getDb();
-    const row = db.prepare("SELECT value FROM app_settings WHERE key = 'auth_credentials'").get() as { value: string } | undefined;
-    let email = 'alagupandi@gmail.com';
-    let password = 'password123';
-    if (row && row.value) {
-      try {
-        const parsed = JSON.parse(row.value);
-        if (parsed.email) email = parsed.email;
-        if (parsed.password) password = parsed.password;
-      } catch (_) {}
-    }
-    return res.json({ success: true, email, password });
+    const creds = await domainRead('togen-dev', () => {
+      const db = getDb();
+      const row = db.prepare("SELECT value FROM app_settings WHERE key = 'auth_credentials'").get() as { value: string } | undefined;
+      let email = localDevCreds.email;
+      let password = localDevCreds.password;
+      if (row && row.value) {
+        try {
+          const parsed = JSON.parse(row.value);
+          if (parsed.email) email = parsed.email;
+          if (parsed.password) password = parsed.password;
+        } catch (_) {}
+      }
+      return { email, password };
+    });
+    localDevCreds = creds;
+    return res.json({ success: true, email: creds.email, password: creds.password });
   } catch (err: any) {
-    return res.json({ success: true, email: 'alagupandi@gmail.com', password: 'password123' });
+    return res.json({ success: true, email: localDevCreds.email, password: localDevCreds.password });
   }
 });
 
 app.post('/api/auth/verify', async (req, res) => {
   try {
     const { email, password } = req.body || {};
-    const db = getDb();
-    const row = db.prepare("SELECT value FROM app_settings WHERE key = 'auth_credentials'").get() as { value: string } | undefined;
-    let validEmail = 'alagupandi@gmail.com';
-    let validPassword = 'password123';
-    if (row && row.value) {
-      try {
-        const parsed = JSON.parse(row.value);
-        if (parsed.email) validEmail = parsed.email;
-        if (parsed.password) validPassword = parsed.password;
-      } catch (_) {}
-    }
+    let validEmail = localDevCreds.email;
+    let validPassword = localDevCreds.password;
+
+    try {
+      const creds = await domainRead('togen-dev', () => {
+        const db = getDb();
+        const row = db.prepare("SELECT value FROM app_settings WHERE key = 'auth_credentials'").get() as { value: string } | undefined;
+        if (row && row.value) {
+          try {
+            const parsed = JSON.parse(row.value);
+            return {
+              email: parsed.email || validEmail,
+              password: parsed.password || validPassword,
+            };
+          } catch (_) {}
+        }
+        return { email: validEmail, password: validPassword };
+      });
+      validEmail = creds.email;
+      validPassword = creds.password;
+      localDevCreds = creds;
+    } catch (_) {}
+
     const inputEmail = String(email || '').toLowerCase().trim();
     const inputPassword = String(password || '');
     const allowedEmails = [validEmail.toLowerCase(), 'alagupandi@gmail.com', 'bharath@gmail.com', 'admin@togen.solar', 'admin'];
@@ -104,18 +122,26 @@ app.post('/api/auth/change-password', async (req, res) => {
         error: { message: 'Password must be at least 4 characters long.' }
       });
     }
-    const db = getDb();
     const targetEmail = (email && typeof email === 'string' && email.trim().length > 0)
       ? email.trim()
       : 'alagupandi@gmail.com';
     const newPassword = password.trim();
+    localDevCreds = { email: targetEmail, password: newPassword };
 
-    const payload = JSON.stringify({ email: targetEmail, password: newPassword });
-    db.prepare(`
-      INSERT INTO app_settings (key, value, updated_at)
-      VALUES ('auth_credentials', ?, CURRENT_TIMESTAMP)
-      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
-    `).run(payload);
+    try {
+      await domainCall('togen-dev', () => {
+        const db = getDb();
+        const payload = JSON.stringify({ email: targetEmail, password: newPassword });
+        db.prepare(`
+          INSERT INTO app_settings (key, value, updated_at)
+          VALUES ('auth_credentials', ?, CURRENT_TIMESTAMP)
+          ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+        `).run(payload);
+        return { success: true };
+      });
+    } catch (dbErr: any) {
+      console.warn('domainCall failed to persist auth_credentials to Firestore, kept in-memory:', dbErr.message);
+    }
 
     return res.json({
       success: true,
