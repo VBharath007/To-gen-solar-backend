@@ -34866,7 +34866,9 @@ var SolarPdf = (() => {
         capacity_kw: q2.capacity_kw || tech2?.capacity_kw || capacityVal2,
         system_capacity_kw: q2.system_capacity_kw || tech2?.system_capacity_kw || capacityVal2,
         technicalDetails: tech2,
-        tax_inclusive: q2.tax_inclusive !== void 0 ? !!q2.tax_inclusive : input.tax_inclusive
+        tax_inclusive: q2.tax_inclusive !== void 0 ? !!q2.tax_inclusive : input.tax_inclusive,
+        manual_tax_rate: q2.manual_tax_rate !== void 0 ? q2.manual_tax_rate : input.manual_tax_rate,
+        discount_percent: q2.discount_percent !== void 0 ? q2.discount_percent : input.discount_percent
       };
     } else {
       const tech2 = input.technicalDetails;
@@ -34933,7 +34935,9 @@ var SolarPdf = (() => {
         batteryQuantity: input.batteryQuantity ?? input.technicalDetails?.battery_quantity ?? input.technicalDetails?.battery_count ?? void 0,
         systemCapacity: input.systemCapacity ?? input.capacity_kw ?? input.system_capacity_kw ?? input.technicalDetails?.capacity_kw ?? input.technicalDetails?.system_capacity_kw ?? input.technicalDetails?.dc_capacity_kwp ?? (input.proposedSystem ? input.proposedSystem.replace(/[^0-9.]/g, "") : void 0),
         technicalDetails: tech2,
-        tax_inclusive: input.tax_inclusive !== void 0 ? !!input.tax_inclusive : void 0
+        tax_inclusive: input.tax_inclusive !== void 0 ? !!input.tax_inclusive : void 0,
+        manual_tax_rate: input.manual_tax_rate !== void 0 ? input.manual_tax_rate : void 0,
+        discount_percent: input.discount_percent !== void 0 ? input.discount_percent : void 0
       };
     }
     const targetBank = qData.bank_account_id ? getBankAccountById(qData.bank_account_id) || getPrimaryBankAccount() : getPrimaryBankAccount();
@@ -35582,15 +35586,22 @@ var SolarPdf = (() => {
       } else if (finalSubtotalVal > 0) {
         finalTaxVal = Math.round(finalSubtotalVal * 0.18);
       }
-      const rawTaxPct = finalSubtotalVal > 0 ? finalTaxVal / finalSubtotalVal * 100 : 18;
-      let taxPct = Number(rawTaxPct.toFixed(2));
-      if (Math.abs(taxPct - 25) < 0.8) taxPct = 25;
-      else if (Math.abs(taxPct - 18) < 0.8) taxPct = 18;
-      else if (Math.abs(taxPct - 12) < 0.8) taxPct = 12;
-      else if (Math.abs(taxPct - 5) < 0.8) taxPct = 5;
+      const finalGrandTotalVal = qData.grand_total !== void 0 && qData.grand_total > 0 ? qData.grand_total / 100 : finalSubtotalVal + finalTaxVal;
+      let taxPct = 18;
+      if (qData.manual_tax_rate !== void 0 && qData.manual_tax_rate !== null && Number(qData.manual_tax_rate) >= 0) {
+        taxPct = Number(qData.manual_tax_rate);
+      } else {
+        const baseForTax = qData.tax_inclusive ? finalGrandTotalVal - finalTaxVal : finalSubtotalVal;
+        const rawTaxPct = baseForTax > 0 ? finalTaxVal / baseForTax * 100 : 18;
+        taxPct = Number(rawTaxPct.toFixed(2));
+        if (Math.abs(taxPct - 25) < 0.8) taxPct = 25;
+        else if (Math.abs(taxPct - 18) < 0.8) taxPct = 18;
+        else if (Math.abs(taxPct - 12) < 0.8) taxPct = 12;
+        else if (Math.abs(taxPct - 5) < 0.8) taxPct = 5;
+      }
       const halfTaxPct = taxPct % 2 === 0 ? (taxPct / 2).toString() : (taxPct / 2).toFixed(1);
       const gstLabel = taxPct > 0 ? `GST (${halfTaxPct}% + ${halfTaxPct}%)` : `GST (0%)`;
-      const finalGrandTotalVal = qData.grand_total !== void 0 && qData.grand_total > 0 ? qData.grand_total / 100 : finalSubtotalVal + finalTaxVal;
+      const finalDiscountVal = qData.total_discount !== void 0 && qData.total_discount > 0 ? qData.total_discount / 100 : 0;
       const stateSub = Number(qData.state_subsidy || 0) / 100;
       const centralSub = Number(qData.central_subsidy || 0) / 100;
       const totalSubsidy = stateSub + centralSub;
@@ -35605,6 +35616,14 @@ var SolarPdf = (() => {
           ${qData.tax_inclusive ? `${Math.max(0, finalGrandTotalVal - finalTaxVal).toLocaleString("en-IN")}/-` : totalDisplay}
         </td>
       </tr>
+      ${finalDiscountVal > 0 ? `
+      <tr>
+        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #f0fdf4; color: #166534; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? "10.5px" : "11px"};">GLOBAL DISCOUNT ${qData.discount_percent ? `(${qData.discount_percent}%)` : ""}</td>
+        <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? "11.5px" : "12.5px"}; color: #166534; vertical-align: middle; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
+          -${finalDiscountVal.toLocaleString("en-IN")}/-
+        </td>
+      </tr>
+      ` : ""}
       <tr>
         <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #edf6f9; color: #0f2b48; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? "10.5px" : "11px"};">${gstLabel}${qData.tax_inclusive ? " [Included]" : ""}</td>
         <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? "11.5px" : "12.5px"}; color: #0f2b48; vertical-align: middle; background: #ffffff; box-sizing: border-box; white-space: nowrap;">

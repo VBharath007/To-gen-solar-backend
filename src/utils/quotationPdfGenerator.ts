@@ -78,6 +78,8 @@ export interface QuotationPdfData {
   systemCapacity?: number | string;
   technicalDetails?: any;
   tax_inclusive?: boolean;
+  manual_tax_rate?: number;
+  discount_percent?: number;
 }
 
 async function toBase64(url: string): Promise<string> {
@@ -925,6 +927,8 @@ export async function generateQuotationPdfPagesHtml(
       system_capacity_kw: (q as any).system_capacity_kw || tech?.system_capacity_kw || capacityVal,
       technicalDetails: tech,
       tax_inclusive: q.tax_inclusive !== undefined ? !!q.tax_inclusive : (input as any).tax_inclusive,
+      manual_tax_rate: (q as any).manual_tax_rate !== undefined ? (q as any).manual_tax_rate : (input as any).manual_tax_rate,
+      discount_percent: (q as any).discount_percent !== undefined ? (q as any).discount_percent : (input as any).discount_percent,
     };
   } else {
     const tech = (input as any).technicalDetails;
@@ -1002,6 +1006,8 @@ export async function generateQuotationPdfPagesHtml(
         (input.proposedSystem ? input.proposedSystem.replace(/[^0-9.]/g, '') : undefined),
       technicalDetails: tech,
       tax_inclusive: (input as any).tax_inclusive !== undefined ? !!(input as any).tax_inclusive : undefined,
+      manual_tax_rate: (input as any).manual_tax_rate !== undefined ? (input as any).manual_tax_rate : undefined,
+      discount_percent: (input as any).discount_percent !== undefined ? (input as any).discount_percent : undefined,
     };
   }
 
@@ -1774,20 +1780,31 @@ export async function generateQuotationPdfPagesHtml(
       finalTaxVal = Math.round(finalSubtotalVal * 0.18);
     }
 
-    const rawTaxPct = finalSubtotalVal > 0 ? (finalTaxVal / finalSubtotalVal) * 100 : 18;
-    let taxPct = Number(rawTaxPct.toFixed(2));
-    if (Math.abs(taxPct - 25) < 0.8) taxPct = 25;
-    else if (Math.abs(taxPct - 18) < 0.8) taxPct = 18;
-    else if (Math.abs(taxPct - 12) < 0.8) taxPct = 12;
-    else if (Math.abs(taxPct - 5) < 0.8) taxPct = 5;
-
-    const halfTaxPct = taxPct % 2 === 0 ? (taxPct / 2).toString() : (taxPct / 2).toFixed(1);
-    const gstLabel = taxPct > 0 ? `GST (${halfTaxPct}% + ${halfTaxPct}%)` : `GST (0%)`;
-
     // Grand Total resolution (Total + GST)
     const finalGrandTotalVal = (qData.grand_total !== undefined && qData.grand_total > 0)
       ? qData.grand_total / 100
       : (finalSubtotalVal + finalTaxVal);
+
+    let taxPct = 18;
+    if (qData.manual_tax_rate !== undefined && qData.manual_tax_rate !== null && Number(qData.manual_tax_rate) >= 0) {
+      taxPct = Number(qData.manual_tax_rate);
+    } else {
+      const baseForTax = qData.tax_inclusive ? (finalGrandTotalVal - finalTaxVal) : finalSubtotalVal;
+      const rawTaxPct = baseForTax > 0 ? (finalTaxVal / baseForTax) * 100 : 18;
+      taxPct = Number(rawTaxPct.toFixed(2));
+      if (Math.abs(taxPct - 25) < 0.8) taxPct = 25;
+      else if (Math.abs(taxPct - 18) < 0.8) taxPct = 18;
+      else if (Math.abs(taxPct - 12) < 0.8) taxPct = 12;
+      else if (Math.abs(taxPct - 5) < 0.8) taxPct = 5;
+    }
+
+    const halfTaxPct = taxPct % 2 === 0 ? (taxPct / 2).toString() : (taxPct / 2).toFixed(1);
+    const gstLabel = taxPct > 0 ? `GST (${halfTaxPct}% + ${halfTaxPct}%)` : `GST (0%)`;
+
+    // Discount resolution
+    const finalDiscountVal = (qData.total_discount !== undefined && qData.total_discount > 0)
+      ? qData.total_discount / 100
+      : 0;
 
     // Subsidies from quotation form
     const stateSub = Number(qData.state_subsidy || 0) / 100;
@@ -1806,6 +1823,14 @@ export async function generateQuotationPdfPagesHtml(
           ${qData.tax_inclusive ? `${Math.max(0, finalGrandTotalVal - finalTaxVal).toLocaleString('en-IN')}/-` : totalDisplay}
         </td>
       </tr>
+      ${finalDiscountVal > 0 ? `
+      <tr>
+        <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #f0fdf4; color: #166534; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">GLOBAL DISCOUNT ${qData.discount_percent ? `(${qData.discount_percent}%)` : ''}</td>
+        <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '11.5px' : '12.5px'}; color: #166534; vertical-align: middle; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
+          -${finalDiscountVal.toLocaleString('en-IN')}/-
+        </td>
+      </tr>
+      ` : ''}
       <tr>
         <td colspan="2" style="border: 1px solid #d9e6ed; padding: ${totalRowPadding}; text-align: right; font-weight: 800; background: #edf6f9; color: #0f2b48; vertical-align: middle; box-sizing: border-box; font-size: ${isCompact ? '10.5px' : '11px'};">${gstLabel}${qData.tax_inclusive ? ' [Included]' : ''}</td>
         <td style="border: 1px solid #d9e6ed; padding: ${totalRowPricePadding}; text-align: right; font-weight: 900; font-size: ${isCompact ? '11.5px' : '12.5px'}; color: #0f2b48; vertical-align: middle; background: #ffffff; box-sizing: border-box; white-space: nowrap;">
