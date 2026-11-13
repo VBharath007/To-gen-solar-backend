@@ -21,12 +21,20 @@ function resolveServiceAccount(): {
   }
 
   // 1. Check inline JSON credential environment variables (recommended for Railway / cloud hosts)
-  const rawJson =
+  let rawJson =
     process.env.FIREBASE_SERVICE_ACCOUNT_JSON ||
     process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON ||
     (process.env.GOOGLE_APPLICATION_CREDENTIALS?.trim().startsWith('{')
       ? process.env.GOOGLE_APPLICATION_CREDENTIALS
       : undefined);
+
+  if (!rawJson && process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+    try {
+      rawJson = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString('utf8');
+    } catch (e) {
+      console.error('Failed to decode FIREBASE_SERVICE_ACCOUNT_BASE64:', e);
+    }
+  }
 
   if (rawJson) {
     const parsed = JSON.parse(rawJson) as ServiceAccount & { project_id?: string };
