@@ -15,8 +15,8 @@ import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 const DEFAULT_PROFILE: UserProfile = {
-  displayName: 'Administrator',
-  email: 'admin@togen.solar',
+  displayName: 'alagupandi',
+  email: 'alagupandi@gmail.com',
   phoneNumber: '+91 98765 43210',
 };
 
