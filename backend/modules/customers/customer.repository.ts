@@ -93,8 +93,47 @@ export class CustomerRepository {
 
   public delete(id: number): boolean {
     const db = getDb();
-    const info = db.prepare('DELETE FROM customers WHERE id = ?').run(id);
-    return info.changes > 0;
+    const existing = this.getById(id);
+    if (!existing) return false;
+
+    return db.transaction(() => {
+      // 1. Delete invoice lines and invoices for this customer
+      const invoices = db.prepare('SELECT id FROM invoices WHERE customer_id = ?').all(id) as { id: number }[];
+      for (const inv of invoices) {
+        db.prepare('DELETE FROM invoice_lines WHERE invoice_id = ?').run(inv.id);
+      }
+      db.prepare('DELETE FROM invoices WHERE customer_id = ?').run(id);
+
+      // 2. Delete payment receipts for this customer
+      db.prepare('DELETE FROM payment_receipts WHERE customer_id = ?').run(id);
+
+      // 3. Delete projects for this customer
+      db.prepare('DELETE FROM projects WHERE customer_id = ?').run(id);
+
+      // 4. Quotations: delete quotation items, tech details, milestones, scope, site photos, then quotations
+      const quotes = db.prepare('SELECT id FROM quotations WHERE customer_id = ?').all(id) as { id: number }[];
+      for (const q of quotes) {
+        db.prepare('DELETE FROM quotation_items WHERE quotation_id = ?').run(q.id);
+        db.prepare('DELETE FROM quotation_technical_details WHERE quotation_id = ?').run(q.id);
+        db.prepare('DELETE FROM quotation_milestones WHERE quotation_id = ?').run(q.id);
+        db.prepare('DELETE FROM quotation_scope WHERE quotation_id = ?').run(q.id);
+        db.prepare('DELETE FROM quotation_site_photos WHERE quotation_id = ?').run(q.id);
+      }
+      db.prepare('DELETE FROM quotations WHERE customer_id = ?').run(id);
+
+      // 5. Site surveys
+      db.prepare('DELETE FROM site_surveys WHERE customer_id = ?').run(id);
+
+      // 6. CRM documents
+      db.prepare('DELETE FROM crm_documents WHERE customer_id = ?').run(id);
+
+      // 7. Installation sites for this customer
+      db.prepare('DELETE FROM installation_sites WHERE customer_id = ?').run(id);
+
+      // 8. Finally delete the customer
+      const info = db.prepare('DELETE FROM customers WHERE id = ?').run(id);
+      return info.changes > 0;
+    })();
   }
 
   private mapRowToCustomer(row: any): Customer {

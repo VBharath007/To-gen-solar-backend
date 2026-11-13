@@ -135,7 +135,8 @@ export class CustomerService {
       if (!deleted) return fail('NOT_FOUND', 'Customer not found');
       return ok({ deleted: true });
     } catch (err: any) {
-      return fail('INTERNAL', err.message);
+      console.error('[CustomerService.deleteCustomer] Error:', err);
+      return fail('INTERNAL', err.message || 'Failed to delete customer');
     }
   }
 }

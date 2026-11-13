@@ -98,8 +98,20 @@ export class InstallationSiteRepository {
 
   public delete(id: number): boolean {
     const db = getDb();
-    const info = db.prepare('DELETE FROM installation_sites WHERE id = ?').run(id);
-    return info.changes > 0;
+    const existing = this.getById(id);
+    if (!existing) return false;
+
+    return db.transaction(() => {
+      // 1. Delete projects referencing this site
+      db.prepare('DELETE FROM projects WHERE site_id = ?').run(id);
+      // 2. Unlink quotations referencing this site
+      db.prepare('UPDATE quotations SET site_id = NULL WHERE site_id = ?').run(id);
+      // 3. Delete surveys referencing this site
+      db.prepare('DELETE FROM site_surveys WHERE site_id = ?').run(id);
+      // 4. Delete the site itself
+      const info = db.prepare('DELETE FROM installation_sites WHERE id = ?').run(id);
+      return info.changes > 0;
+    })();
   }
 
   private mapRowToSite(row: any): InstallationSite {
