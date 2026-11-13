@@ -1806,9 +1806,16 @@ export async function generateQuotationPdfPagesHtml(
       ? qData.total_discount / 100
       : 0;
 
-    // Subsidies from quotation form
-    const stateSub = Number(qData.state_subsidy || 0) / 100;
-    const centralSub = Number(qData.central_subsidy || 0) / 100;
+    // Subsidies from quotation form (robust handling for paise or rupees)
+    const parseSubsidyToRupees = (val: any): number => {
+      if (!val) return 0;
+      const num = Number(val);
+      if (isNaN(num) || num <= 0) return 0;
+      return num >= 50000 ? Math.round(num / 100) : Math.round(num);
+    };
+
+    const stateSub = parseSubsidyToRupees(qData.state_subsidy);
+    const centralSub = parseSubsidyToRupees(qData.central_subsidy);
     const totalSubsidy = stateSub + centralSub;
 
     const totalDisplay = isReviewState ? 'Subject to Authorized Review' : `${finalSubtotalVal.toLocaleString('en-IN')}/-`;

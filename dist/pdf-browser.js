@@ -35602,8 +35602,14 @@ var SolarPdf = (() => {
       const halfTaxPct = taxPct % 2 === 0 ? (taxPct / 2).toString() : (taxPct / 2).toFixed(1);
       const gstLabel = taxPct > 0 ? `GST (${halfTaxPct}% + ${halfTaxPct}%)` : `GST (0%)`;
       const finalDiscountVal = qData.total_discount !== void 0 && qData.total_discount > 0 ? qData.total_discount / 100 : 0;
-      const stateSub = Number(qData.state_subsidy || 0) / 100;
-      const centralSub = Number(qData.central_subsidy || 0) / 100;
+      const parseSubsidyToRupees = (val) => {
+        if (!val) return 0;
+        const num = Number(val);
+        if (isNaN(num) || num <= 0) return 0;
+        return num >= 5e4 ? Math.round(num / 100) : Math.round(num);
+      };
+      const stateSub = parseSubsidyToRupees(qData.state_subsidy);
+      const centralSub = parseSubsidyToRupees(qData.central_subsidy);
       const totalSubsidy = stateSub + centralSub;
       const totalDisplay = isReviewState ? "Subject to Authorized Review" : `${finalSubtotalVal.toLocaleString("en-IN")}/-`;
       const taxDisplay = isReviewState ? "18% Applicable Upon Review" : `${finalTaxVal.toLocaleString("en-IN")}/-`;

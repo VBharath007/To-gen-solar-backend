@@ -251,6 +251,12 @@ export function getQuotation(id: number): ApiResponse<Quotation> {
     if (q.total_discount && q.total_discount > 0 && q.total_discount < 100000) {
       q.total_discount = Math.round(q.total_discount * 100);
     }
+    if (q.state_subsidy && q.state_subsidy > 0 && q.state_subsidy < 50000) {
+      q.state_subsidy = Math.round(q.state_subsidy * 100);
+    }
+    if (q.central_subsidy && q.central_subsidy > 0 && q.central_subsidy < 50000) {
+      q.central_subsidy = Math.round(q.central_subsidy * 100);
+    }
 
     if (q.payment_terms && typeof q.payment_terms === 'string') {
       if (q.payment_terms.includes('10 Days from the date of submission')) {
@@ -664,8 +670,8 @@ export function createQuotation(dto: CreateQuotationDto): ApiResponse<Quotation>
         manual_customer_phone: isManualCustomer ? (dto.manual_customer_phone?.trim() || null) : null,
         manual_customer_email: isManualCustomer ? (dto.manual_customer_email?.trim() || null) : null,
         manual_customer_address: isManualCustomer ? (dto.manual_customer_address?.trim() || null) : null,
-        state_subsidy: dto.state_subsidy || 0,
-        central_subsidy: dto.central_subsidy || 0,
+        state_subsidy: dto.state_subsidy ? (Number(dto.state_subsidy) > 0 && Number(dto.state_subsidy) < 50000 ? Math.round(Number(dto.state_subsidy) * 100) : Math.round(Number(dto.state_subsidy))) : 0,
+        central_subsidy: dto.central_subsidy ? (Number(dto.central_subsidy) > 0 && Number(dto.central_subsidy) < 50000 ? Math.round(Number(dto.central_subsidy) * 100) : Math.round(Number(dto.central_subsidy))) : 0,
         bank_account_id: dto.bank_account_id || null,
       });
 
@@ -815,6 +821,9 @@ export function updateQuotation(dto: UpdateQuotationDto): ApiResponse<Quotation>
           updates.push(`${field} = @${field}`);
           if (field === 'is_manual_customer' || field === 'tax_inclusive') {
             params[field] = (dto as any)[field] ? 1 : 0;
+          } else if (field === 'state_subsidy' || field === 'central_subsidy') {
+            const sVal = Number((dto as any)[field]);
+            params[field] = (sVal > 0 && sVal < 50000) ? Math.round(sVal * 100) : (isNaN(sVal) ? 0 : Math.round(sVal));
           } else {
             params[field] = (dto as any)[field];
           }
