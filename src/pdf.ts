@@ -82,11 +82,30 @@ async function ensureWarmInstance(): Promise<{ worker: Page; print: Page }> {
     await workerPage.setContent(
       '<html><head><script>var __name = (t, v) => t; window.__name = (t, v) => t; globalThis.__name = (t, v) => t;</script></head><body></body></html>'
     );
-    const pdfBrowserPath = existsSync(resolve(currentDir, '../dist/pdf-browser.js'))
+    let pdfBrowserPath = existsSync(resolve(currentDir, '../dist/pdf-browser.js'))
       ? resolve(currentDir, '../dist/pdf-browser.js')
       : (existsSync(resolve('server/dist/pdf-browser.js'))
           ? resolve('server/dist/pdf-browser.js')
           : resolve('dist/pdf-browser.js'));
+
+    if (!existsSync(pdfBrowserPath)) {
+      console.log('[PDF] dist/pdf-browser.js not found, auto-building with esbuild...');
+      const targetOut = resolve(currentDir, '../dist/pdf-browser.js');
+      const { build } = await import('esbuild');
+      await build({
+        entryPoints: [resolve(currentDir, 'pdf-entry.ts')],
+        outfile: targetOut,
+        bundle: true,
+        platform: 'browser',
+        format: 'iife',
+        globalName: 'SolarPdf',
+        loader: { '.png': 'dataurl', '.jpg': 'dataurl', '.jpeg': 'dataurl' },
+        tsconfig: resolve(currentDir, '../tsconfig.json'),
+      });
+      pdfBrowserPath = targetOut;
+      console.log('[PDF] dist/pdf-browser.js built successfully at:', pdfBrowserPath);
+    }
+
     await workerPage.addScriptTag({ path: pdfBrowserPath });
 
     // 2. Warm print page (pure HTML/CSS to PDF with JavaScript disabled for speed & security)
