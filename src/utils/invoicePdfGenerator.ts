@@ -278,7 +278,7 @@ export async function generateTaxInvoiceHtml(data: InvoiceData): Promise<string>
                 <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; white-space: nowrap;">${fmt(subTotal)}</td>
               </tr>
               <tr style="border-bottom: 1.5px solid #94a3b8; white-space: nowrap; background: #fafbfc;">
-                <td style="padding: 8px 12px; color: #334155; font-weight: 600; border-right: 1px solid #e2e8f0; white-space: nowrap;">Total Tax Amount ${data.taxInclusive ? '<span style="font-size: 10px; color: #64748b; font-weight: 500;">(Included)</span>' : ''}</td>
+                <td style="padding: 8px 12px; color: #334155; font-weight: 600; border-right: 1px solid #e2e8f0; white-space: nowrap;">Total Tax Amount (CGST+SGST) ${data.taxInclusive ? '<span style="font-size: 10px; color: #64748b; font-weight: 500;">(Included)</span>' : ''}</td>
                 <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; white-space: nowrap;">${fmt(totalGST)}</td>
               </tr>
               <tr style="border-bottom: ${hasPaymentInfo ? '1.5px solid #94a3b8' : 'none'}; white-space: nowrap; background: #eff6ff;">
