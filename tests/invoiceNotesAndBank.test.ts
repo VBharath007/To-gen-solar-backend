@@ -179,7 +179,7 @@ describe('generateTaxInvoiceHtml payment totals and balance due', () => {
     expect(html).toContain('₹10,000.00');
     expect(html).toContain('Balance Due in Words:');
     expect(html).toContain('Ten Thousand Rupees Only');
-    expect(html).toContain('(Included)');
+    expect(html).toContain('(CGST+SGST)');
   });
 
   it('displays correct totals for tax-exclusive invoice', async () => {
